@@ -1,23 +1,17 @@
-import json
-qualification = str(input("Введите номер квалификации: "))
-found = False
-with open('dump.json', encoding= 'utf-8') as file:
-    file_content = file.read()
-    no_json = json.loads(file_content)
-    for skill in no_json:
-        if skill["model"] == "data.skill" and skill["fields"]["code"] == qualification:
-            skill_code = skill["fields"]["code"]
-            skill_title = skill["fields"]["title"]
-            found = True
-            for prof in no_json:
-                if prof["model"] == "data.specialty":
-                    if prof["fields"]["code"] in qualification:
-                        prof_code = prof["fields"]["code"]
-                        prof_title = prof["fields"]["title"]
-                        prof_type = prof["fields"]["c_type"]
-            break
-if not  found:
-    print("=" * 20, "Не найдено", "=" * 20)
-else:
-    print(f"{skill_code} >> Квалификация '{skill_title}'")
-    print(f"{prof_code} >> Специальность '{prof_title}', {prof_type}")
+import json  # Импорт модуля для работы с JSON файлами.
+file = open('dump.json', 'r', encoding='utf-8') # Открытие файла dump.json в режиме чтения с кодировкой UTF-8.
+data = json.load(file)  # Загрузка содержимое JSON файла в переменную `data`.
+number = input("Введите номер квалификации: ") # Запрос у пользователя ввод номера квалификации.
+print("\n=============== Результат поиска ===============") # Выводим заголовок для результата поиска.
+for item in data: # Перебираем все элементы в загруженных данных (предположительно список словарей).
+    # Проверяем, соответствует ли элемент определённым условиям:
+    # 1. Ключ 'model' имеет значение 'data.skill'.
+    # 2. Поле 'fields' содержит значение для указанного пользователем ключа `code`.
+    if item['model'] == 'data.skill' and item['fields']['code'].startswith(number): # startswith проверяет, начинается ли строка на указанную подстроку
+        # Если условия выполнены, выводим код и название квалификации.
+        print(f"{item['fields']['code']} >> {item['fields']['title']}")
+        found = True  # Устанавливаем флаг `found` в True (результат найден).
+
+# Если ни одного подходящего результата не найдено, выводим соответствующее сообщение.
+if not found:
+    print("============== Не найдено ===============")
